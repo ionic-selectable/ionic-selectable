@@ -11,7 +11,8 @@ export const config: Config = {
     },
     {
       type: 'dist-custom-elements',
-      generateTypeDeclarations: true,
+      customElementsExportBehavior: 'auto-define-custom-elements',
+      externalRuntime: false,
     },
     {
       type: 'docs-readme',
@@ -21,5 +22,12 @@ export const config: Config = {
       serviceWorker: null, // disable service workers
     },
   ],
+  testing: {
+    browserHeadless: 'new',
+  },
+  excludeUnusedDependencies: false,
   plugins: [sass()],
+  extras: {
+    enableImportInjection: true,
+  },
 };

@@ -1,25 +1,6 @@
-import {
-  Component,
-  Prop,
-  h,
-  Host,
-  ComponentInterface,
-  Element,
-  Event,
-  EventEmitter,
-  Watch,
-  Method,
-  State,
-} from '@stencil/core';
-import { CssClassMap, getMode, StyleEventDetail, AnimationBuilder, HeaderFn } from '@ionic/core';
-import {
-  hostContext,
-  addRippleEffectElement,
-  findItem,
-  findItemLabel,
-  renderHiddenInput,
-  getClassMap,
-} from '../../utils/utils';
+import { Component, Prop, h, Host, ComponentInterface, Element, Event, EventEmitter, Watch, Method, State } from '@stencil/core';
+import { CssClassMap, getMode, StyleEventDetail, AnimationBuilder } from '@ionic/core';
+import { hostContext, addRippleEffectElement, findItem, findItemLabel, renderHiddenInput, getClassMap } from '../../utils/utils';
 import {
   IonicSelectableInfiniteScrolledEvent,
   IonicSelectableSearchingEvent,
@@ -64,10 +45,11 @@ export class IonicSelectableComponent implements ComponentInterface {
 
   private contentElement: HTMLIonContentElement;
   private infiniteScrollElement: HTMLIonInfiniteScrollElement;
-  private virtualScrollElement: HTMLIonVirtualScrollElement;
+  private virtualScrollElement: HTMLVirtualScrollElement;
   private headerElement: HTMLIonHeaderElement;
 
   private isChangeInternal = false;
+  private virtualItems: any[] = [];
   private groups: Array<{ value: string; text: string; items: any[] }> = [];
 
   public filteredGroups: Array<{ value: string; text: string; items: any[] }> = [];
@@ -337,12 +319,12 @@ export class IonicSelectableComponent implements ComponentInterface {
   @Prop({ mutable: true }) public infiniteScrollThreshold = '100px';
 
   /**
-   * Determines whether Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll) is enabled.
+   * Determines whether VirtualScroll is enabled.
+   * (CURRENTLY DISABLED - IN DEVELOPMENT)
    * See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).
    *
    * @default false
    * @memberof IonicSelectableComponent
-   * @deprecated check Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll)
    */
   @Prop({ mutable: true }) public hasVirtualScroll = false;
 
@@ -502,15 +484,7 @@ export class IonicSelectableComponent implements ComponentInterface {
    * @default 'none'
    * @memberof IonicSelectableComponent
    */
-  @Prop({ mutable: true }) public searchInputmode:
-    | 'none'
-    | 'text'
-    | 'tel'
-    | 'url'
-    | 'email'
-    | 'numeric'
-    | 'decimal'
-    | 'search' = 'none';
+  @Prop({ mutable: true }) public searchInputmode: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search' = 'none';
 
   /**
    * The icon to use as the search icon in the [Searchbar](https://ionicframework.com/docs/api/searchbar).
@@ -693,23 +667,19 @@ export class IonicSelectableComponent implements ComponentInterface {
    *
    * @memberof IonicSelectableComponent
    */
-  @Prop({ mutable: true }) public virtualScrollHeaderFn: HeaderFn = () => null;
+  @Prop({ mutable: true }) public virtualScrollHeaderFn: any = () => null;
 
   @Watch('shouldStoreItemValue')
   protected onShouldStoreItemValueChanged(value: boolean): void {
     if (!value && !this.hasObjects) {
-      throw new Error(
-        `If items contains primitive elements, shouldStoreItemValue must be null or true: ${this.element.id}`,
-      );
+      throw new Error(`If items contains primitive elements, shouldStoreItemValue must be null or true: ${this.element.id}`);
     }
   }
 
   @Watch('itemValueField')
   protected onItemValueFieldChanged(value: string): void {
     if (this.hasObjects && this.isNullOrWhiteSpace(value)) {
-      throw new Error(
-        `If items contains object elements, itemValueField must be non null or non whitespace : ${this.element.id}`,
-      );
+      throw new Error(`If items contains object elements, itemValueField must be non null or non whitespace : ${this.element.id}`);
     } else if (!this.hasObjects && !this.isNullOrWhiteSpace(value)) {
       throw new Error(`If items contains primitive elements, itemValueField must be null: ${this.element.id}`);
     }
@@ -718,9 +688,7 @@ export class IonicSelectableComponent implements ComponentInterface {
   @Watch('itemTextField')
   protected onItemTextFieldChanged(value: string): void {
     if (this.hasObjects && this.isNullOrWhiteSpace(value)) {
-      throw new Error(
-        `If items contains object elements, itemTextField must be non null or non whitespace : ${this.element.id}`,
-      );
+      throw new Error(`If items contains object elements, itemTextField must be non null or non whitespace : ${this.element.id}`);
     } else if (!this.hasObjects && !this.isNullOrWhiteSpace(value)) {
       throw new Error(`If items contains primitive elements, itemTextField must be null: ${this.element.id}`);
     }
@@ -816,9 +784,17 @@ export class IonicSelectableComponent implements ComponentInterface {
 
     this.modalElement.isOpen = true;
     this.infiniteScrollElement = this.modalElement.querySelector('ion-infinite-scroll');
-    this.virtualScrollElement = this.modalElement.querySelector('ion-virtual-scroll');
+    this.virtualScrollElement = this.modalElement.querySelector('virtual-scroll'); //this.modalElement.querySelector('ion-virtual-scroll');
+    //TODO: implement virtual scroll
+    if(this.hasVirtualScroll){
+      this.virtualScrollElement.addEventListener('update', (event: any) => {
+        console.log('update')
+        this.virtualItems = event.detail;
+      });
+    }
     this.contentElement = this.modalElement.querySelector('ion-content');
     this.headerElement = this.modalElement.querySelector('ion-header');
+    this.setItems(this.items);
     this.isOpened = true;
     this.setFocus();
     this.whatchModalEvents();
@@ -1070,9 +1046,7 @@ export class IonicSelectableComponent implements ComponentInterface {
 
     // Remove deleted item from selected items.
     if (this.selectedItems) {
-      this.selectedItems = this.selectedItems.filter(
-        _item => this.getItemValue(item) !== this.getStoredItemValue(_item),
-      );
+      this.selectedItems = this.selectedItems.filter(_item => this.getItemValue(item) !== this.getStoredItemValue(_item));
     }
 
     // Remove deleted item from value.
@@ -1357,9 +1331,7 @@ export class IonicSelectableComponent implements ComponentInterface {
 
     // Grouping is supported for objects only.
     // Ionic VirtualScroll has it's own implementation of grouping.
-    this.hasGroups = Boolean(
-      this.hasObjects && (this.groupValueField || this.groupTextField) && !this.hasVirtualScroll,
-    );
+    this.hasGroups = Boolean(this.hasObjects && (this.groupValueField || this.groupTextField) && !this.hasVirtualScroll);
 
     /* It's important to have an empty starting group with empty items (groups[0].items),
      * because we bind to it when using VirtualScroll.
@@ -1395,7 +1367,8 @@ export class IonicSelectableComponent implements ComponentInterface {
     this.hasFilteredItems = !this.areGroupsEmpty(this.filteredGroups);
     if (this.hasVirtualScroll) {
       // Rerender Virtual Scroll List After Adding New Data
-      this.virtualScrollElement.checkEnd();
+      this.virtualScrollElement.list = this.filteredGroups[0].items;
+      this.virtualScrollElement?.setInfinateOn();
     }
     if (this.isInited) {
       this.emitItemsChanged();
@@ -1715,24 +1688,20 @@ export class IonicSelectableComponent implements ComponentInterface {
             }}
           ></span>
         ) : (
-          <ion-icon
-            name={this.isItemSelected(item) ? 'checkmark-circle' : 'radio-button-off'}
-            size="small"
-            slot={this.itemIconSlot}
-          ></ion-icon>
+          <ion-icon name={this.isItemSelected(item) ? 'checkmark-circle' : 'radio-button-off'} size="small" slot={this.itemIconSlot}></ion-icon>
         )}
       </ion-item>
     );
   }
 
-  private renderHeader(header: any): any {
+/*   private renderHeader(header: any): any {
     return (
       <ion-item-divider color={this.groupColor}>
-        {/* Need ion-label for text ellipsis. */}
         <ion-label>{header}</ion-label>
       </ion-item-divider>
     );
   }
+ */
 
   private renderContent() {
     return (
@@ -1752,9 +1721,7 @@ export class IonicSelectableComponent implements ComponentInterface {
             }}
           ></span>
         )}
-        {!this.hasFilteredItems && (!this.hasTemplateRender || !this.hasTemplateRender('searchFail')) && (
-          <div class="ion-margin ion-text-center">{this.searchFailText}</div>
-        )}
+        {!this.hasFilteredItems && (!this.hasTemplateRender || !this.hasTemplateRender('searchFail')) && <div class="ion-margin ion-text-center">{this.searchFailText}</div>}
         {!this.hasVirtualScroll && this.hasFilteredItems && (
           <ion-list>
             {this.filteredGroups.map(group => {
@@ -1793,14 +1760,25 @@ export class IonicSelectableComponent implements ComponentInterface {
           </ion-list>
         )}
         {this.hasVirtualScroll && this.hasFilteredItems && (
-          <ion-virtual-scroll
+          /* <ion-virtual-scroll
             items={this.filteredGroups[0].items}
             approxHeaderHeight={this.virtualScrollApproxHeaderHeight}
             approxItemHeight={this.virtualScrollApproxItemHeight}
             renderItem={(item): void => this.renderItem(item)}
             renderHeader={(header): void => this.renderHeader(header)}
             headerFn={this.virtualScrollHeaderFn}
-          ></ion-virtual-scroll>
+          ></ion-virtual-scroll> */
+          <div class="virtual-container">
+            <virtual-scroll bottom-offset="20" virtual-ratio="15" selector="">
+              <div slot="virtual" class="virtual-slot">
+                {this.virtualItems.map(item => (
+                  <div class="offer virtual-item" id={item.id}>
+                    {this.renderItem(item)}
+                  </div>
+                ))}
+              </div>
+            </virtual-scroll>
+          </div>
         )}
         {this.hasInfiniteScroll && (
           <ion-infinite-scroll threshold={this.infiniteScrollThreshold} onIonInfinite={(): void => this.getMoreItems()}>
@@ -1921,11 +1899,7 @@ export class IonicSelectableComponent implements ComponentInterface {
                 <ion-row>
                   {this.canClear && (
                     <ion-col>
-                      <ion-button
-                        onClick={(): void => this.clearItems()}
-                        disabled={!(this.selectedItems.length > 0)}
-                        expand="full"
-                      >
+                      <ion-button onClick={(): void => this.clearItems()} disabled={!(this.selectedItems.length > 0)} expand="full">
                         {this.clearButtonText}
                       </ion-button>
                     </ion-col>
@@ -1939,11 +1913,7 @@ export class IonicSelectableComponent implements ComponentInterface {
                   )}
                   {(this.isMultiple || this.hasConfirmButton || this.canClear) && (
                     <ion-col>
-                      <ion-button
-                        onClick={(): void => this.confirmSelection()}
-                        disabled={!this.isConfirmButtonEnabled}
-                        expand="full"
-                      >
+                      <ion-button onClick={(): void => this.confirmSelection()} disabled={!this.isConfirmButtonEnabled} expand="full">
                         {this.confirmButtonText}
                       </ion-button>
                     </ion-col>
@@ -1991,10 +1961,7 @@ export class IonicSelectableComponent implements ComponentInterface {
     let addPlaceholderClass = false;
     let selectText = this.getText();
 
-    if (
-      selectText === '' &&
-      (placeholder != null || (this.hasTemplateRender && this.hasTemplateRender('placeholder')))
-    ) {
+    if (selectText === '' && (placeholder != null || (this.hasTemplateRender && this.hasTemplateRender('placeholder')))) {
       selectText = placeholder;
       addPlaceholderClass = true;
     }
@@ -2074,13 +2041,7 @@ export class IonicSelectableComponent implements ComponentInterface {
             <div class="ionic-selectable-icon-inner" part="icon-inner"></div>
           </div>
         )}
-        <button
-          type="button"
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
-          disabled={isDisabled}
-          ref={buttonElement => (this.buttonElement = buttonElement)}
-        />
+        <button type="button" onFocus={this.onFocus} onBlur={this.onBlur} disabled={isDisabled} ref={buttonElement => (this.buttonElement = buttonElement)} />
         {this.renderModal()}
       </Host>
     );

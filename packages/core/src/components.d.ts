@@ -5,8 +5,10 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { AnimationBuilder, HeaderFn, StyleEventDetail } from "@ionic/core";
+import { AnimationBuilder, StyleEventDetail } from "@ionic/core";
 import { HasTemplateRenderFn, IonicSelectableBlurredEvent, IonicSelectableChangedEvent, IonicSelectableClearedEvent, IonicSelectableClosedEvent, IonicSelectableFocusedEvent, IonicSelectableInfiniteScrolledEvent, IonicSelectableItemAddingEvent, IonicSelectableItemsChangedEvent, IonicSelectableOpenedEvent, IonicSelectableSearchFailedEvent, IonicSelectableSearchingEvent, IonicSelectableSearchSuccessedEvent, IonicSelectableSelectedEvent, TemplateRenderFn } from "./components/ionic-selectable/ionic-selectable.interfaces.component";
+export { AnimationBuilder, StyleEventDetail } from "@ionic/core";
+export { HasTemplateRenderFn, IonicSelectableBlurredEvent, IonicSelectableChangedEvent, IonicSelectableClearedEvent, IonicSelectableClosedEvent, IonicSelectableFocusedEvent, IonicSelectableInfiniteScrolledEvent, IonicSelectableItemAddingEvent, IonicSelectableItemsChangedEvent, IonicSelectableOpenedEvent, IonicSelectableSearchFailedEvent, IonicSelectableSearchingEvent, IonicSelectableSearchSuccessedEvent, IonicSelectableSelectedEvent, TemplateRenderFn } from "./components/ionic-selectable/ionic-selectable.interfaces.component";
 export namespace Components {
     interface IonicSelectable {
         /**
@@ -167,10 +169,9 @@ export namespace Components {
          */
         "hasValue": () => Promise<boolean>;
         /**
-          * Determines whether Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll) is enabled. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).
+          * Determines whether VirtualScroll is enabled. (CURRENTLY DISABLED - IN DEVELOPMENT) See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).
           * @default false
           * @memberof IonicSelectableComponent
-          * @deprecated check Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll)
          */
         "hasVirtualScroll": boolean;
         /**
@@ -336,14 +337,7 @@ export namespace Components {
           * @default 'none'
           * @memberof IonicSelectableComponent
          */
-        "searchInputmode": | 'none'
-    | 'text'
-    | 'tel'
-    | 'url'
-    | 'email'
-    | 'numeric'
-    | 'decimal'
-    | 'search';
+        "searchInputmode": 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
         /**
           * A placeholder for [Searchbar](https://ionicframework.com/docs/api/searchbar). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#searchplaceholder).
           * @default 'Search'
@@ -447,7 +441,7 @@ export namespace Components {
           * See Ionic VirtualScroll [headerFn](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).
           * @memberof IonicSelectableComponent
          */
-        "virtualScrollHeaderFn": HeaderFn;
+        "virtualScrollHeaderFn": any;
     }
     interface IonicSelectableModal {
         /**
@@ -455,13 +449,53 @@ export namespace Components {
          */
         "update": () => Promise<void>;
     }
+    interface VirtualScroll {
+        "bottomOffset": number;
+        "clear": () => Promise<void>;
+        "forceUpdateComponent": () => Promise<void>;
+        "list": Array<any>;
+        "refresh": () => Promise<void>;
+        "scrollToNode": (index: number, speed: number, offset?: number) => Promise<void>;
+        "selector": string;
+        "setInfinateFinally": () => Promise<void>;
+        "setInfinateOn": () => Promise<void>;
+        "virtualRatio": number;
+    }
 }
 export interface IonicSelectableCustomEvent<T> extends CustomEvent<T> {
     detail: T;
     target: HTMLIonicSelectableElement;
 }
+export interface VirtualScrollCustomEvent<T> extends CustomEvent<T> {
+    detail: T;
+    target: HTMLVirtualScrollElement;
+}
 declare global {
+    interface HTMLIonicSelectableElementEventMap {
+        "infiniteScrolled": IonicSelectableInfiniteScrolledEvent<string>;
+        "searching": IonicSelectableSearchingEvent<string>;
+        "searchFailed": IonicSelectableSearchFailedEvent<string>;
+        "searchSuccessed": IonicSelectableSearchSuccessedEvent<string>;
+        "itemAdding": IonicSelectableItemAddingEvent<any[]>;
+        "cleared": IonicSelectableClearedEvent<any[]>;
+        "changed": IonicSelectableChangedEvent<any[]>;
+        "itemsChanged": IonicSelectableItemsChangedEvent<any[]>;
+        "selected": IonicSelectableSelectedEvent<any>;
+        "opened": IonicSelectableOpenedEvent<any[]>;
+        "closed": IonicSelectableClosedEvent<any[]>;
+        "focused": IonicSelectableFocusedEvent<any[]>;
+        "blurred": IonicSelectableBlurredEvent<any[]>;
+        "ionStyle": StyleEventDetail;
+    }
     interface HTMLIonicSelectableElement extends Components.IonicSelectable, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLIonicSelectableElementEventMap>(type: K, listener: (this: HTMLIonicSelectableElement, ev: IonicSelectableCustomEvent<HTMLIonicSelectableElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLIonicSelectableElementEventMap>(type: K, listener: (this: HTMLIonicSelectableElement, ev: IonicSelectableCustomEvent<HTMLIonicSelectableElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
     }
     var HTMLIonicSelectableElement: {
         prototype: HTMLIonicSelectableElement;
@@ -473,9 +507,28 @@ declare global {
         prototype: HTMLIonicSelectableModalElement;
         new (): HTMLIonicSelectableModalElement;
     };
+    interface HTMLVirtualScrollElementEventMap {
+        "toBottom": number;
+        "update": Array<any>;
+    }
+    interface HTMLVirtualScrollElement extends Components.VirtualScroll, HTMLStencilElement {
+        addEventListener<K extends keyof HTMLVirtualScrollElementEventMap>(type: K, listener: (this: HTMLVirtualScrollElement, ev: VirtualScrollCustomEvent<HTMLVirtualScrollElementEventMap[K]>) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
+        addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLVirtualScrollElementEventMap>(type: K, listener: (this: HTMLVirtualScrollElement, ev: VirtualScrollCustomEvent<HTMLVirtualScrollElementEventMap[K]>) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof DocumentEventMap>(type: K, listener: (this: Document, ev: DocumentEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener<K extends keyof HTMLElementEventMap>(type: K, listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
+        removeEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | EventListenerOptions): void;
+    }
+    var HTMLVirtualScrollElement: {
+        prototype: HTMLVirtualScrollElement;
+        new (): HTMLVirtualScrollElement;
+    };
     interface HTMLElementTagNameMap {
         "ionic-selectable": HTMLIonicSelectableElement;
         "ionic-selectable-modal": HTMLIonicSelectableModalElement;
+        "virtual-scroll": HTMLVirtualScrollElement;
     }
 }
 declare namespace LocalJSX {
@@ -576,10 +629,9 @@ declare namespace LocalJSX {
          */
         "hasTemplateRender"?: HasTemplateRenderFn;
         /**
-          * Determines whether Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll) is enabled. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).
+          * Determines whether VirtualScroll is enabled. (CURRENTLY DISABLED - IN DEVELOPMENT) See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).
           * @default false
           * @memberof IonicSelectableComponent
-          * @deprecated check Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll)
          */
         "hasVirtualScroll"?: boolean;
         /**
@@ -786,14 +838,7 @@ declare namespace LocalJSX {
           * @default 'none'
           * @memberof IonicSelectableComponent
          */
-        "searchInputmode"?: | 'none'
-    | 'text'
-    | 'tel'
-    | 'url'
-    | 'email'
-    | 'numeric'
-    | 'decimal'
-    | 'search';
+        "searchInputmode"?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
         /**
           * A placeholder for [Searchbar](https://ionicframework.com/docs/api/searchbar). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#searchplaceholder).
           * @default 'Search'
@@ -875,13 +920,22 @@ declare namespace LocalJSX {
           * See Ionic VirtualScroll [headerFn](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).
           * @memberof IonicSelectableComponent
          */
-        "virtualScrollHeaderFn"?: HeaderFn;
+        "virtualScrollHeaderFn"?: any;
     }
     interface IonicSelectableModal {
+    }
+    interface VirtualScroll {
+        "bottomOffset"?: number;
+        "list"?: Array<any>;
+        "onToBottom"?: (event: VirtualScrollCustomEvent<number>) => void;
+        "onUpdate"?: (event: VirtualScrollCustomEvent<Array<any>>) => void;
+        "selector"?: string;
+        "virtualRatio"?: number;
     }
     interface IntrinsicElements {
         "ionic-selectable": IonicSelectable;
         "ionic-selectable-modal": IonicSelectableModal;
+        "virtual-scroll": VirtualScroll;
     }
 }
 export { LocalJSX as JSX };
@@ -890,6 +944,7 @@ declare module "@stencil/core" {
         interface IntrinsicElements {
             "ionic-selectable": LocalJSX.IonicSelectable & JSXBase.HTMLAttributes<HTMLIonicSelectableElement>;
             "ionic-selectable-modal": LocalJSX.IonicSelectableModal & JSXBase.HTMLAttributes<HTMLIonicSelectableModalElement>;
+            "virtual-scroll": LocalJSX.VirtualScroll & JSXBase.HTMLAttributes<HTMLVirtualScrollElement>;
         }
     }
 }

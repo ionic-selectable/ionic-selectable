@@ -1,0 +1,80 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Ports</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Ports</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+    <ion-item>
+      <ion-label position="floating">Ports</ion-label>
+      <ionic-selectable
+        #ionicSelectable
+        id="sel1"
+        [items]="items"
+        [itemValueField]="'id'"
+        [itemTextField]="'port'"
+        [canAddItem]="true"
+        [canClear]="true"
+        (changed)="onChanged($event)"
+      >
+        <div
+          *ionicSelectableItemTemplate="let port; let isItemSelected = isItemSelected;"
+        >
+          {{isItemSelected}} - {{port.port}} ({{port.country.country}})
+        </div>
+        <div *ionicSelectableCloseButtonTemplate>Hola</div>
+        <!-- <ion-toolbar *ionicSelectableFooterTemplate>Footer</ion-toolbar> -->
+        <div *ionicSelectableValueTemplate="let port;" class="hola">
+          Value {{port}}
+        </div>
+        <div *ionicSelectablePlaceholderTemplate="let port;" class="s">
+          Place {{port}}
+        </div>
+        <div
+          *ionicSelectableAddItemTemplate="let port; let isAdd = isAdd"
+          class="hola"
+        >
+          <ion-content>
+            <ion-list>
+              <ion-item-divider>
+                {{isAdd ? 'Add' : 'Edit'}} Port
+              </ion-item-divider>
+              <ion-item>
+                <ion-input></ion-input>
+              </ion-item>
+            </ion-list>
+          </ion-content>
+          <ion-footer>
+            <ion-toolbar>
+              <ion-row>
+                <ion-col>
+                  <ion-button
+                    expand="full"
+                    (click)="ionicSelectable.hideAddItemTemplate()"
+                  >
+                    Cancelar
+                  </ion-button>
+                </ion-col>
+                <ion-col>
+                  <ion-button expand="full">
+                    {{isAdd ? 'Add' : 'Save'}}
+                  </ion-button>
+                </ion-col>
+              </ion-row>
+            </ion-toolbar>
+          </ion-footer>
+        </div>
+      </ionic-selectable>
+    </ion-item>
+  </div>
+</ion-content>

@@ -15,6 +15,9 @@ export const findItem = (componentEl: HTMLElement) => {
 
 export const addRippleEffectElement = (componentElement: HTMLElement) => {
   const itemElement = componentElement.closest('ion-item');
+  if (!itemElement) {
+    return;
+  }
   const itemNative = itemElement.shadowRoot.querySelector('div.item-native');
   if (itemNative) {
     const ionRipple = itemNative.ownerDocument!.createElement('ion-ripple-effect');

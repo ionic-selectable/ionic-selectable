@@ -3,31 +3,34 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
-    <title>IonicSelectable</title>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
-    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <title>Stencil Component Starter</title>
+
+    <script type="module" src="../node_modules/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="../node_modules/@ionic/core/dist/ionic/ionic.js"></script>
+
     <script type="module" src="/build/ionic-selectable.esm.js"></script>
     <script nomodule src="/build/ionic-selectable.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+
+    <link rel="stylesheet" href="../node_modules/@ionic/core/css/ionic.bundle.css" />
   </head>
   <body>
-    <!--
     <ion-item>
       <ion-label>Ports</ion-label>
     </ion-item>
     <ion-item>
       <ion-label>Ports</ion-label>
       <ionic-selectable
-        id="sel1"
-        value="[1]"
-        is-multiple="true"
-        should-store-item-value="true"
+        id="sel0"
+        should-store-item-value="false"
+        is-multiple="false"
         item-value-field="id"
         item-text-field="port"
         placeholder="Select One"
         group-text-field="country.country"
+        has-infinite-scroll="true"
       ></ionic-selectable>
     </ion-item>
+    <!--
     <ion-item>
       <ion-label>Ports</ion-label>
       <ionic-selectable
@@ -46,38 +49,62 @@
     </ion-item>
   -->
 
-    <ion-button id="open-modal" expand="block">Open</ion-button>
-    <p>{{ message }}</p>
-    <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
-      <ion-header>
-        <ion-toolbar>
-          <ion-buttons slot="start">
-            <ion-button (click)="cancel()">Cancel</ion-button>
-          </ion-buttons>
-          <ion-title>Welcome</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
-      <ion-content class="ion-padding">
-        <ionic-selectable
-        id="sel0"
-        should-store-item-value="false"
-        is-multiple="false"
-        item-value-field="id"
-        item-text-field="port"
-        placeholder="Select One"
-        group-text-field="country.country"
-      ></ionic-selectable>
-      </ion-content>
-    </ion-modal>
+    <!--   <ion-button id="open-modal" expand="block">Open</ion-button>
+  <ion-modal trigger="open-modal" (willDismiss)="onWillDismiss($event)">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancel()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Welcome</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirm()" [strong]="true">Confirm</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ionic-selectable
+      id="sel0"
+      should-store-item-value="false"
+      is-multiple="false"
+      item-value-field="id"
+      item-text-field="port"
+      placeholder="Select One"
+      group-text-field="country.country"
+    ></ionic-selectable>
+    </ion-content>
+  </ion-modal> -->
     <script>
       var el0 = document.getElementById('sel0');
       el0.items = [
         { id: 1, port: 'Salina Cruz', country: { country: 'Mexico' } },
         { id: 2, port: 'Valencia', country: { country: 'Spain' } },
         { id: 3, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 4, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 5, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 6, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 7, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 8, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 9, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 10, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 11, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 12, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 13, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 14, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 15, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 16, port: 'Cancun', country: { country: 'Mexico' } },
+        { id: 17, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 18, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 19, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 20, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 21, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 22, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 23, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 24, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 25, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 26, port: 'Veracruz', country: { country: 'Mexico' } },
+        { id: 27, port: 'Huatulco', country: { country: 'Mexico' } },
+
       ];
       el0.value = { id: 1, port: 'Salina Cruz', country: { country: 'Mexico' } };
       // el0.value = { id: 1, port: 'Salina Cruz', country: { country: "Mexico"} };
@@ -89,49 +116,49 @@
         console.log(event);
       });
       /*
-      var el1 = document.getElementById('sel1');
-      var items = [];
-      for (let index = 1; index < 2; index++) {
-        items.push({ id: index, port: 'Salina Cruz' + index, country: { country: 'Mexico' } });
-      }
-      var limit = items.length + 3;
-      for (let index = items.length + 1; index < limit; index++) {
-        items.push({ id: index, port: 'Valencia' + index, country: { country: 'Spain' } });
-      }
-      el1.items = items;
-      el1.canClear = false;
-      el1.canAddItem = true;
-      el1.canSearch = true;
-      el1.hasInfiniteScroll = true;
-      el1.hasVirtualScroll = false;
-      el1.disabledItems = [{ id: 1, port: 'Salina Cruz', country: { country: 'Mexico' } }];
-      el1.addEventListener('selected', event => {
-        console.log(event);
-      });
-      el1.addEventListener('cleared', event => {
-        console.log(event);
-      });
-      el1.addEventListener('changed', event => {
-        console.log(event);
-        console.log(el1.value);
-      });
-      el1.addEventListener('addItem', event => {
-        console.log(event);
-      });
-      el1.addEventListener('search', event => {
-        console.log(event);
-      });
+    var el1 = document.getElementById('sel1');
+    var items = [];
+    for (let index = 1; index < 2; index++) {
+      items.push({ id: index, port: 'Salina Cruz' + index, country: { country: 'Mexico' } });
+    }
+    var limit = items.length + 3;
+    for (let index = items.length + 1; index < limit; index++) {
+      items.push({ id: index, port: 'Valencia' + index, country: { country: 'Spain' } });
+    }
+    el1.items = items;
+    el1.canClear = false;
+    el1.canAddItem = true;
+    el1.canSearch = true;
+    el1.hasInfiniteScroll = true;
+    el1.hasVirtualScroll = false;
+    el1.disabledItems = [{ id: 1, port: 'Salina Cruz', country: { country: 'Mexico' } }];
+    el1.addEventListener('selected', event => {
+      console.log(event);
+    });
+    el1.addEventListener('cleared', event => {
+      console.log(event);
+    });
+    el1.addEventListener('changed', event => {
+      console.log(event);
+      console.log(el1.value);
+    });
+    el1.addEventListener('addItem', event => {
+      console.log(event);
+    });
+    el1.addEventListener('search', event => {
+      console.log(event);
+    });
 
-      var el2 = document.getElementById('sel2');
-      el2.items = [1, 2, 3];
-      el2.value = [1, 2];
-      el2.addEventListener('changed', event => {
-        console.log(event);
-      });
-      el2.addEventListener('closed', event => {
-        console.log(event);
-      });
-      */
+    var el2 = document.getElementById('sel2');
+    el2.items = [1, 2, 3];
+    el2.value = [1, 2];
+    el2.addEventListener('changed', event => {
+      console.log(event);
+    });
+    el2.addEventListener('closed', event => {
+      console.log(event);
+    });
+    */
       //el2.value = { id: 1, port: 'Salina Cruz', country: { country: "Mexico"} };
     </script>
   </body>

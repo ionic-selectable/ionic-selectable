@@ -6,7 +6,10 @@
     "experimentalDecorators": true,
     "lib": [
       "dom",
-      "es2017"
+      "es2017",
+      "es2020",
+      "es2021",
+      "esnext"
     ],
     "moduleResolution": "node",
     "module": "esnext",
@@ -17,8 +20,7 @@
     "jsxFactory": "h"
   },
   "include": [
-    "src",
-    "types/jsx.d.ts"
+    "src"
   ],
   "exclude": [
     "node_modules"

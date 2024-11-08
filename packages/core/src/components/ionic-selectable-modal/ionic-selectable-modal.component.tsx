@@ -20,7 +20,7 @@ export class IonicSelectableModalComponent implements ComponentInterface {
   @State() private toggleUpdate: boolean = false;
 
   public infiniteScrollElement: HTMLIonInfiniteScrollElement;
-  public virtualScrollElement: HTMLIonVirtualScrollElement;
+  public virtualScrollElement: HTMLVirtualScrollElement;
   public contentElement: HTMLIonContentElement;
   /**
    * Rerender the component

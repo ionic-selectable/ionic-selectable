@@ -25,7 +25,7 @@
 | `hasInfiniteScroll`               | `has-infinite-scroll`                 | Determines whether Ionic [InfiniteScroll](https://ionicframework.com/docs/api/infinite-scroll) is enabled. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasinfinitescroll).                                                                                                                                                                                          | `boolean`                                                                             | `false`                                                   |
 | `hasSearchText`                   | `has-search-text`                     | Determines whether user has typed anything in [Searchbar](https://ionicframework.com/docs/api/searchbar). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hassearchtext).                                                                                                                                                                                               | `boolean`                                                                             | `undefined`                                               |
 | `hasTemplateRender`               | --                                    | NOTE: only Vanilla JS API.                                                                                                                                                                                                                                                                                                                                                                             | `(type: TemplateType) => boolean`                                                     | `undefined`                                               |
-| `hasVirtualScroll`                | `has-virtual-scroll`                  | <span style="color:red">**[DEPRECATED]**</span> check Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll)<br/><br/>Determines whether Ionic [VirtualScroll](https://ionicframework.com/docs/api/virtual-scroll) is enabled. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).                                                    | `boolean`                                                                             | `false`                                                   |
+| `hasVirtualScroll`                | `has-virtual-scroll`                  | Determines whether VirtualScroll is enabled. (CURRENTLY DISABLED - IN DEVELOPMENT) See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#hasvirtualscroll).                                                                                                                                                                                                                   | `boolean`                                                                             | `false`                                                   |
 | `headerColor`                     | `header-color`                        | Header color. [Ionic colors](https://ionicframework.com/docs/theming/advanced#colors) are supported. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#headercolor).                                                                                                                                                                                                      | `string`                                                                              | `null`                                                    |
 | `infiniteScrollThreshold`         | `infinite-scroll-threshold`           | The threshold distance from the bottom of the content to call the infinite output event when scrolled. Use the value 100px when the scroll is within 100 pixels from the bottom of the page. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#infinite-scroll).                                                                                                          | `string`                                                                              | `'100px'`                                                 |
 | `isConfirmButtonEnabled`          | `is-confirm-button-enabled`           | Determines whether Confirm button is enabled. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#isconfirmbuttonenabled).                                                                                                                                                                                                                                                  | `boolean`                                                                             | `true`                                                    |
@@ -62,7 +62,7 @@
 | `value`                           | `value`                               | The value of the component. See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#value).                                                                                                                                                                                                                                                                                     | `any`                                                                                 | `null`                                                    |
 | `virtualScrollApproxHeaderHeight` | `virtual-scroll-approx-header-height` | See Ionic VirtualScroll [approxHeaderHeight](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).                                                                                                                                                                                               | `number`                                                                              | `30`                                                      |
 | `virtualScrollApproxItemHeight`   | `virtual-scroll-approx-item-height`   | See Ionic VirtualScroll [approxItemHeight](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).                                                                                                                                                                                                 | `number`                                                                              | `45`                                                      |
-| `virtualScrollHeaderFn`           | --                                    | See Ionic VirtualScroll [headerFn](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).                                                                                                                                                                                                         | `(item: any, index: number, items: any[]) => string`                                  | `() => null`                                              |
+| `virtualScrollHeaderFn`           | `virtual-scroll-header-fn`            | See Ionic VirtualScroll [headerFn](https://ionicframework.com/docs/api/virtual-scroll). See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#virtualscrollheaderfn).                                                                                                                                                                                                         | `any`                                                                                 | `() => null`                                              |
 
 
 ## Events
@@ -91,6 +91,12 @@
 Adds item.
 **Note**: If you want an item to be added to the original array as well use two-way data binding syntax on `[(items)]` field.
 See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#additem).
+
+#### Parameters
+
+| Name   | Type  | Description  |
+| ------ | ----- | ------------ |
+| `item` | `any` | Item to add. |
 
 #### Returns
 
@@ -136,6 +142,12 @@ Type: `Promise<void>`
 Deletes item.
 **Note**: If you want an item to be deleted from the original array as well use two-way data binding syntax on `[(items)]` field.
 See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#deleteitem).
+
+#### Parameters
+
+| Name   | Type  | Description     |
+| ------ | ----- | --------------- |
+| `item` | `any` | Item to delete. |
 
 #### Returns
 
@@ -305,6 +317,13 @@ Type: `Promise<void>`
 Selects or deselects all or specific items.
 See more on [GitHub](https://github.com/ionic-selectable/ionic-selectable/wiki#toggleitems).
 
+#### Parameters
+
+| Name       | Type      | Description                                                      |
+| ---------- | --------- | ---------------------------------------------------------------- |
+| `isSelect` | `boolean` | Determines whether to select or deselect items.                  |
+| `items`    | `any[]`   | Items to toggle. If items are not set all items will be toggled. |
+
 #### Returns
 
 Type: `Promise<void>`
@@ -327,10 +346,16 @@ Type: `Promise<void>`
 | Name                    | Description                                                                                 |
 | ----------------------- | ------------------------------------------------------------------------------------------- |
 | `--padding-bottom`      | Bottom padding                                                                              |
+| `--padding-bottom`      | Bottom padding                                                                              |
+| `--padding-end`         | Right padding if direction is left-to-right, and left padding if direction is right-to-left |
 | `--padding-end`         | Right padding if direction is left-to-right, and left padding if direction is right-to-left |
 | `--padding-start`       | Left padding if direction is left-to-right, and right padding if direction is right-to-left |
+| `--padding-start`       | Left padding if direction is left-to-right, and right padding if direction is right-to-left |
+| `--padding-top`         | Top padding                                                                                 |
 | `--padding-top`         | Top padding                                                                                 |
 | `--placeholder-color`   | Placeholder color                                                                           |
+| `--placeholder-color`   | Placeholder color                                                                           |
+| `--placeholder-opacity` | Placeholder opacity                                                                         |
 | `--placeholder-opacity` | Placeholder opacity                                                                         |
 
 
@@ -341,11 +366,11 @@ Type: `Promise<void>`
 - ion-item
 - ion-label
 - ion-icon
-- ion-item-divider
 - ion-spinner
 - ion-list
 - ion-item-group
-- ion-virtual-scroll
+- ion-item-divider
+- [virtual-scroll](../virtual-scroll)
 - ion-infinite-scroll
 - ion-infinite-scroll-content
 - ion-modal
@@ -367,11 +392,11 @@ graph TD;
   ionic-selectable --> ion-item
   ionic-selectable --> ion-label
   ionic-selectable --> ion-icon
-  ionic-selectable --> ion-item-divider
   ionic-selectable --> ion-spinner
   ionic-selectable --> ion-list
   ionic-selectable --> ion-item-group
-  ionic-selectable --> ion-virtual-scroll
+  ionic-selectable --> ion-item-divider
+  ionic-selectable --> virtual-scroll
   ionic-selectable --> ion-infinite-scroll
   ionic-selectable --> ion-infinite-scroll-content
   ionic-selectable --> ion-modal
@@ -388,7 +413,6 @@ graph TD;
   ionic-selectable --> ion-ripple-effect
   ion-item --> ion-icon
   ion-item --> ion-ripple-effect
-  ion-item --> ion-note
   ion-infinite-scroll-content --> ion-spinner
   ion-modal --> ion-backdrop
   ion-button --> ion-ripple-effect
